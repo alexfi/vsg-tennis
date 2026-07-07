@@ -1,6 +1,14 @@
 export interface MatchRecord {
-  score: string
+  /** Alphabetically-first player's games per set (e.g., [6, 6]) */
+  player1Games: number[]
+  /** Alphabetically-second player's games per set (e.g., [4, 1]) */
+  player2Games: number[]
   winnerId: string
+}
+
+/** Format games arrays into a score string (e.g., [6,6],[4,1] → "6:4, 6:1") */
+export function formatScore(games1: number[], games2: number[]): string {
+  return games1.map((g, i) => `${g}:${games2[i]}`).join(", ")
 }
 
 export interface PlayerStanding {
@@ -15,18 +23,7 @@ export interface PlayerStanding {
   position: number
 }
 
-/**
- * Parse a single set score like "6:4". Returns { left, right }.
- * By convention, "left" is always the alphabetically-first player's games.
- */
-function parseSet(setStr: string): { left: number; right: number } | null {
-  const parts = setStr.trim().split(":")
-  if (parts.length !== 2) return null
-  const left = parseInt(parts[0], 10)
-  const right = parseInt(parts[1], 10)
-  if (isNaN(left) || isNaN(right)) return null
-  return { left, right }
-}
+
 
 export function computeStandings(
   playerIds: string[],
@@ -71,20 +68,19 @@ export function computeStandings(
     loser.losses += 1
     h2h.get(winnerId)!.add(loserId)
 
-    // Parse sets. Left = player1's games, Right = player2's games
-    const sets = record.score.split(",").map((s) => s.trim()).filter(Boolean)
+    // Use structured arrays directly
+    const p1gm = record.player1Games
+    const p2gm = record.player2Games
     let p1SetsWon = 0
     let p2SetsWon = 0
     let p1Games = 0
     let p2Games = 0
 
-    for (const setStr of sets) {
-      const parsed = parseSet(setStr)
-      if (!parsed) continue
-      p1Games += parsed.left
-      p2Games += parsed.right
-      if (parsed.left > parsed.right) p1SetsWon++
-      else if (parsed.right > parsed.left) p2SetsWon++
+    for (let i = 0; i < p1gm.length; i++) {
+      p1Games += p1gm[i]
+      p2Games += p2gm[i]
+      if (p1gm[i] > p2gm[i]) p1SetsWon++
+      else if (p2gm[i] > p1gm[i]) p2SetsWon++
     }
 
     // Assign to winner/loser

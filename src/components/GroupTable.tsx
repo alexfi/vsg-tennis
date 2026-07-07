@@ -4,18 +4,34 @@ import { ScoreCell } from "@/components/ScoreCell"
 import type { Player } from "@/data/tournament"
 import { makeMatchDocId } from "@/data/tournament"
 import type { MatchRecord } from "@/lib/standings"
-import { computeStandings } from "@/lib/standings"
-import { saveMatch, deleteMatch, determineWinner } from "@/hooks/useMatches"
+import { computeStandings, formatScore } from "@/lib/standings"
+import { saveMatch, deleteMatch } from "@/hooks/useMatches"
 
-/** Flip each set in a score string (e.g., "6:4, 6:1" → "4:6, 1:6") */
-function flipScore(score: string): string {
-  return score
-    .split(",")
-    .map((s) => {
-      const [left, right] = s.trim().split(":")
-      return `${right.trim()}:${left.trim()}`
-    })
-    .join(", ")
+/** Parse user input like "6:4, 6:1" into two games arrays. */
+function parseScoreInput(
+  input: string
+): { games1: number[]; games2: number[] } | null {
+  const g1: number[] = []
+  const g2: number[] = []
+  for (const s of input.split(",")) {
+    const parts = s.trim().split(":")
+    if (parts.length !== 2) return null
+    const a = parseInt(parts[0], 10)
+    const b = parseInt(parts[1], 10)
+    if (isNaN(a) || isNaN(b)) return null
+    g1.push(a)
+    g2.push(b)
+  }
+  return g1.length > 0 ? { games1: g1, games2: g2 } : null
+}
+
+/** Format a record's games for display from the given player's perspective. */
+function displayScore(record: MatchRecord, rowIsP1: boolean): string | null {
+  const p1 = record.player1Games
+  const p2 = record.player2Games
+  if (!p1 || !p2 || p1.length === 0) return null
+  const [left, right] = rowIsP1 ? [p1, p2] : [p2, p1]
+  return formatScore(left, right)
 }
 
 interface GroupTableProps {
@@ -51,7 +67,7 @@ export function GroupTable({
         const [a, b] = [p1.id, p2.id].sort()
         const docId = makeMatchDocId(divisionId, groupName, p1.id, p2.id)
         const record = matches.get(docId)
-        if (record && record.score && record.winnerId) {
+        if (record && record.player1Games.length > 0 && record.winnerId) {
           matchResults.push({ player1Id: a, player2Id: b, record })
         }
       }
@@ -76,15 +92,26 @@ export function GroupTable({
 
   const handleSave = useCallback(
     async (p1Id: string, p2Id: string, score: string) => {
+      const parsed = parseScoreInput(score)
+      if (!parsed) return
       const sorted = [p1Id, p2Id].sort()
-      // If the row player (p1Id) is not the alphabetically-first, the user
-      // entered the score from the row player's perspective. Flip it back to
-      // canonical form (alphabetically-first player's games on the left).
-      const canonicalScore = p1Id !== sorted[0] ? flipScore(score) : score
-      const winnerId = determineWinner(canonicalScore, sorted[0], sorted[1])
-      if (!winnerId) return // Can't determine winner
+      // parsed.games1 = row player's games, parsed.games2 = col player's games
+      const rowIsP1 = p1Id === sorted[0]
+      const player1Games = rowIsP1 ? parsed.games1 : parsed.games2
+      const player2Games = rowIsP1 ? parsed.games2 : parsed.games1
+
+      // Compute winner from structured arrays
+      let p1Sets = 0
+      let p2Sets = 0
+      for (let i = 0; i < player1Games.length; i++) {
+        if (player1Games[i] > player2Games[i]) p1Sets++
+        else if (player2Games[i] > player1Games[i]) p2Sets++
+      }
+      if (p1Sets === p2Sets) return // tie
+      const winnerId = p1Sets > p2Sets ? sorted[0] : sorted[1]
+
       const docId = makeMatchDocId(divisionId, groupName, p1Id, p2Id)
-      await saveMatch(docId, canonicalScore, winnerId)
+      await saveMatch(docId, player1Games, player2Games, winnerId)
     },
     [divisionId, groupName]
   )
@@ -146,13 +173,13 @@ export function GroupTable({
                     const isDiagonal = rowIdx === colIdx
                     const isInverted = rowIdx > colIdx
 
-                    // For the bottom-left (inverted), flip each set so the row
-                    // player's games appear first (e.g., "6:4, 6:1" → "4:6, 1:6")
+                    // Show score from the row player's perspective.
+                    // Stored arrays are always [alpha-first, alpha-second].
+                    const sorted = [rowPlayer.id, colPlayer.id].sort()
+                    const rowIsP1 = rowPlayer.id === sorted[0]
                     let score: string | null = null
-                    if (record && record.score) {
-                      score = isInverted
-                        ? flipScore(record.score)
-                        : record.score
+                    if (record && record.player1Games.length > 0) {
+                      score = displayScore(record, rowIsP1)
                     }
 
                     return (
