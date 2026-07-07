@@ -7,6 +7,17 @@ import type { MatchRecord } from "@/lib/standings"
 import { computeStandings } from "@/lib/standings"
 import { saveMatch, deleteMatch, determineWinner } from "@/hooks/useMatches"
 
+/** Flip each set in a score string (e.g., "6:4, 6:1" → "4:6, 1:6") */
+function flipScore(score: string): string {
+  return score
+    .split(",")
+    .map((s) => {
+      const [left, right] = s.trim().split(":")
+      return `${right.trim()}:${left.trim()}`
+    })
+    .join(", ")
+}
+
 interface GroupTableProps {
   divisionId: string
   groupName: string
@@ -66,10 +77,14 @@ export function GroupTable({
   const handleSave = useCallback(
     async (p1Id: string, p2Id: string, score: string) => {
       const sorted = [p1Id, p2Id].sort()
-      const winnerId = determineWinner(score, sorted[0], sorted[1])
+      // If the row player (p1Id) is not the alphabetically-first, the user
+      // entered the score from the row player's perspective. Flip it back to
+      // canonical form (alphabetically-first player's games on the left).
+      const canonicalScore = p1Id !== sorted[0] ? flipScore(score) : score
+      const winnerId = determineWinner(canonicalScore, sorted[0], sorted[1])
       if (!winnerId) return // Can't determine winner
       const docId = makeMatchDocId(divisionId, groupName, p1Id, p2Id)
-      await saveMatch(docId, score, winnerId)
+      await saveMatch(docId, canonicalScore, winnerId)
     },
     [divisionId, groupName]
   )
@@ -131,10 +146,13 @@ export function GroupTable({
                     const isDiagonal = rowIdx === colIdx
                     const isInverted = rowIdx > colIdx
 
-                    // For the bottom-left (inverted), show the same score
+                    // For the bottom-left (inverted), flip each set so the row
+                    // player's games appear first (e.g., "6:4, 6:1" → "4:6, 1:6")
                     let score: string | null = null
                     if (record && record.score) {
-                      score = record.score
+                      score = isInverted
+                        ? flipScore(record.score)
+                        : record.score
                     }
 
                     return (
