@@ -62,8 +62,9 @@ export function computeStandings(
     const winner = map.get(winnerId)!
     const loser = map.get(loserId)!
 
-    // Points
-    winner.points += 1
+    // Points: 2 for win, 1 for loss
+    winner.points += 2
+    loser.points += 1
     winner.wins += 1
     loser.losses += 1
     h2h.get(winnerId)!.add(loserId)
