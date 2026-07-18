@@ -71,7 +71,7 @@ export function EditableScore({
 				onBlur={commit}
 				onKeyDown={handleKeyDown}
 				className={cn(
-					"h-full min-h-9 w-full border-0 rounded-none text-center text-xs bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-inset",
+					"h-full min-h-10 w-full rounded-none border-0 bg-[var(--color-card)] text-center text-xs font-medium text-[var(--color-foreground)] focus-visible:ring-2 focus-visible:ring-[var(--color-ring)] focus-visible:ring-inset",
 					className,
 				)}
 				placeholder={placeholder}
@@ -84,18 +84,18 @@ export function EditableScore({
 			type="button"
 			disabled={!isAdmin || disabled}
 			className={cn(
-				"flex min-h-9 w-full items-center justify-center rounded text-center text-xs select-none",
+				"flex min-h-10 w-full items-center justify-center rounded-none text-center text-xs select-none transition-colors duration-200",
 				isAdmin &&
 					!disabled &&
-					"cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800 hover:ring-1 hover:ring-blue-500 hover:ring-inset",
-				!score && "text-gray-300 dark:text-gray-600",
-				score && "text-gray-700 dark:text-gray-200 font-medium",
-				muted && "text-gray-400 dark:text-gray-500",
-				disabled && "cursor-default opacity-70",
+					"cursor-pointer hover:bg-[var(--color-accent)] hover:ring-1 hover:ring-[var(--color-ring)] hover:ring-inset",
+				!score && "text-[var(--color-muted-foreground)]/45",
+				score && "font-semibold text-[var(--color-foreground)]",
+				muted && "text-[var(--color-muted-foreground)]",
+				disabled && "cursor-default opacity-65",
 				className,
 			)}
 			onDoubleClick={handleDoubleClick}
-			title={isAdmin && !disabled ? "Double-click to edit" : undefined}
+			title={isAdmin && !disabled ? "Double-click redagavimui" : undefined}
 		>
 			{score || "—"}
 		</button>

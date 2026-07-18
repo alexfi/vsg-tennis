@@ -106,85 +106,96 @@ export function GroupTable({
 	);
 
 	return (
-		<section className="overflow-x-auto">
-			<h2 className="mb-4 text-lg font-semibold text-gray-800 dark:text-gray-200">
-				Grupė {groupName}
-			</h2>
-			<table className="border-collapse">
-				<thead>
-					<tr>
-						<th className="border border-gray-300 dark:border-gray-700 bg-gray-100 dark:bg-gray-900 px-2 py-2 text-xs text-gray-500 dark:text-gray-400 font-medium w-28 text-left">
-							Žaidėjas
-						</th>
-						{sortedPlayers.map((p) => (
-							<th
-								key={p.id}
-								className="border border-gray-300 dark:border-gray-700 bg-gray-100 dark:bg-gray-900 px-1 py-2 text-xs text-gray-500 dark:text-gray-400 font-medium w-24"
-							>
-								{p.name}
+		<section className="space-y-3">
+			<div className="flex items-end justify-between gap-3">
+				<h2 className="text-lg font-bold tracking-[-0.03em] text-[var(--color-foreground)]">
+					Grupė {groupName}
+				</h2>
+				{isAdmin && (
+					<p className="hidden text-xs text-[var(--color-muted-foreground)] sm:block">
+						Double-click rezultatą redagavimui
+					</p>
+				)}
+			</div>
+			<div className="overflow-x-auto rounded-2xl border border-[var(--color-border)] bg-[var(--color-card)] shadow-sm">
+				<table className="min-w-max border-separate border-spacing-0">
+					<thead>
+						<tr>
+							<th className="sticky left-0 z-20 w-32 border-b border-r border-[var(--color-border)] bg-[var(--color-muted)] px-3 py-3 text-left text-xs font-bold uppercase tracking-[0.12em] text-[var(--color-muted-foreground)]">
+								Žaidėjas
 							</th>
-						))}
-						<th className="border border-gray-300 dark:border-gray-700 bg-gray-100 dark:bg-gray-900 px-2 py-2 text-xs text-gray-500 dark:text-gray-400 font-medium w-16 text-center">
-							Taškai
-						</th>
-						<th className="border border-gray-300 dark:border-gray-700 bg-gray-100 dark:bg-gray-900 px-2 py-2 text-xs text-gray-500 dark:text-gray-400 font-medium w-14 text-center">
-							Vieta
-						</th>
-					</tr>
-				</thead>
-				<tbody>
-					{sortedPlayers.map((rowPlayer, rowIdx) => {
-						const st = standingMap.get(rowPlayer.id);
-						return (
-							<tr key={rowPlayer.id}>
-								<td className="border border-gray-300 dark:border-gray-700 bg-gray-100 dark:bg-gray-900 px-2 py-2 text-xs text-gray-700 dark:text-gray-300 font-medium">
-									{rowPlayer.name}
-								</td>
-								{sortedPlayers.map((colPlayer, colIdx) => {
-									const docId = makeMatchDocId(
-										divisionId,
-										groupName,
-										rowPlayer.id,
-										colPlayer.id,
-									);
-									const record = matches.get(docId);
-									const isDiagonal = rowIdx === colIdx;
-									const isInverted = rowIdx > colIdx;
+							{sortedPlayers.map((p) => (
+								<th
+									key={p.id}
+									className="w-24 border-b border-r border-[var(--color-border)] bg-[var(--color-muted)] px-2 py-3 text-center text-xs font-semibold text-[var(--color-muted-foreground)]"
+								>
+									{p.name}
+								</th>
+							))}
+							<th className="w-16 border-b border-r border-[var(--color-border)] bg-[var(--color-muted)] px-2 py-3 text-center text-xs font-bold uppercase tracking-[0.12em] text-[var(--color-muted-foreground)]">
+								Taškai
+							</th>
+							<th className="w-14 border-b border-[var(--color-border)] bg-[var(--color-muted)] px-2 py-3 text-center text-xs font-bold uppercase tracking-[0.12em] text-[var(--color-muted-foreground)]">
+								Vieta
+							</th>
+						</tr>
+					</thead>
+					<tbody>
+						{sortedPlayers.map((rowPlayer, rowIdx) => {
+							const st = standingMap.get(rowPlayer.id);
+							return (
+								<tr key={rowPlayer.id} className="group/row">
+									<td className="sticky left-0 z-10 border-b border-r border-[var(--color-border)] bg-[var(--color-muted)] px-3 py-3 text-xs font-semibold text-[var(--color-foreground)] shadow-[8px_0_16px_-18px_var(--color-foreground)]">
+										{rowPlayer.name}
+									</td>
+									{sortedPlayers.map((colPlayer, colIdx) => {
+										const docId = makeMatchDocId(
+											divisionId,
+											groupName,
+											rowPlayer.id,
+											colPlayer.id,
+										);
+										const record = matches.get(docId);
+										const isDiagonal = rowIdx === colIdx;
+										const isInverted = rowIdx > colIdx;
 
-									// Show score from the row player's perspective.
-									// Stored arrays are always [alpha-first, alpha-second].
-									const sorted = [rowPlayer.id, colPlayer.id].sort();
-									const rowIsP1 = rowPlayer.id === sorted[0];
-									let score: string | null = null;
-									if (record && record.player1Games.length > 0) {
-										score = displayScore(record, rowIsP1);
-									}
+										// Show score from the row player's perspective.
+										// Stored arrays are always [alpha-first, alpha-second].
+										const sorted = [rowPlayer.id, colPlayer.id].sort();
+										const rowIsP1 = rowPlayer.id === sorted[0];
+										let score: string | null = null;
+										if (record && record.player1Games.length > 0) {
+											score = displayScore(record, rowIsP1);
+										}
 
-									return (
-										<ScoreCell
-											key={colPlayer.id}
-											score={score}
-											isAdmin={isAdmin}
-											isDiagonal={isDiagonal}
-											isInverted={isInverted}
-											onSave={(newScore) =>
-												handleSave(rowPlayer.id, colPlayer.id, newScore)
-											}
-											onDelete={() => handleDelete(rowPlayer.id, colPlayer.id)}
-										/>
-									);
-								})}
-								<td className="border border-gray-300 dark:border-gray-700 text-center text-sm font-bold text-gray-900 dark:text-white bg-gray-100 dark:bg-gray-900">
-									{st?.points ?? 0}
-								</td>
-								<td className="border border-gray-300 dark:border-gray-700 text-center text-sm font-bold text-yellow-600 dark:text-yellow-400 bg-gray-100 dark:bg-gray-900">
-									{st?.position ?? "-"}
-								</td>
-							</tr>
-						);
-					})}
-				</tbody>
-			</table>
+										return (
+											<ScoreCell
+												key={colPlayer.id}
+												score={score}
+												isAdmin={isAdmin}
+												isDiagonal={isDiagonal}
+												isInverted={isInverted}
+												onSave={(newScore) =>
+													handleSave(rowPlayer.id, colPlayer.id, newScore)
+												}
+												onDelete={() =>
+													handleDelete(rowPlayer.id, colPlayer.id)
+												}
+											/>
+										);
+									})}
+									<td className="border-b border-r border-[var(--color-border)] bg-[var(--color-muted)] text-center text-sm font-extrabold text-[var(--color-foreground)]">
+										{st?.points ?? 0}
+									</td>
+									<td className="border-b border-[var(--color-border)] bg-[var(--color-muted)] text-center text-sm font-extrabold text-[var(--color-foreground)]">
+										{st?.position ?? "-"}
+									</td>
+								</tr>
+							);
+						})}
+					</tbody>
+				</table>
+			</div>
 		</section>
 	);
 }

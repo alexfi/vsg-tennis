@@ -15,6 +15,14 @@ function getInitialTournamentView(): TournamentView {
 	return params.get("tournament") === "doubles" ? "doubles" : "singles";
 }
 
+function LoadingState() {
+	return (
+		<div className="flex items-center justify-center py-24">
+			<div className="h-8 w-8 animate-spin rounded-full border-2 border-[var(--color-border)] border-t-[var(--color-primary)]" />
+		</div>
+	);
+}
+
 function App() {
 	const divisions = useMemo(() => getAllDivisions(), []);
 	const { theme, toggleTheme } = useTheme();
@@ -22,7 +30,6 @@ function App() {
 		getInitialTournamentView,
 	);
 
-	// Admin mode: check URL param ?mode=admin
 	const [isAdmin] = useState(() => {
 		const params = new URLSearchParams(window.location.search);
 		return params.get("mode") === "admin";
@@ -40,6 +47,7 @@ function App() {
 	const title = isDoubles
 		? "Visagino ALL INCLUSIVE 2026 dvejetų turnyras"
 		: TOURNAMENT_DATA.tournamentName;
+	const activeDivisionName = isDoubles ? "Dvejetai" : division.name;
 
 	const changeTournamentView = (view: TournamentView) => {
 		setTournamentView(view);
@@ -50,95 +58,84 @@ function App() {
 	};
 
 	return (
-		<div className="min-h-screen bg-white dark:bg-gray-950 text-gray-900 dark:text-gray-100">
-			{/* Header */}
-			<header className="border-b border-gray-200 dark:border-gray-800 bg-white/80 dark:bg-gray-950/80 backdrop-blur sticky top-0 z-50">
-				<div className="max-w-[1600px] mx-auto px-4 py-4 flex items-center justify-between">
-					<div>
-						<h1 className="text-xl font-bold text-gray-900 dark:text-white">
-							{title}
-						</h1>
-						<p className="text-sm text-gray-500 dark:text-gray-500 mt-0.5">
-							{isDoubles ? "Dvejetai" : "Vienetai"} &middot; Grupių Etapas
+		<div className="min-h-screen bg-[var(--color-background)] font-sans text-[var(--color-foreground)]">
+			<header className="sticky top-0 z-50 border-b border-[var(--color-border)] bg-[var(--color-background)]/90 backdrop-blur-xl">
+				<div className="mx-auto flex max-w-[1600px] items-center justify-between gap-4 px-4 py-3 sm:px-6 lg:px-8">
+					<div className="min-w-0">
+						<p className="truncate text-sm font-semibold tracking-[-0.02em]">
+							Visagino All Inclusive 2026
+						</p>
+						<p className="text-xs text-[var(--color-muted-foreground)]">
+							{isDoubles ? "Dvejetai" : "Vienetai"} · Grupių etapas
 						</p>
 					</div>
-					<div className="flex items-center gap-3">
+					<div className="flex items-center gap-2">
 						{isAdmin && (
-							<span className="text-xs bg-blue-600/20 text-blue-400 px-2 py-1 rounded font-medium">
-								Admin Mode
+							<span className="rounded-full border border-[var(--color-border)] bg-[var(--color-card)] px-2.5 py-1 text-xs font-semibold text-[var(--color-foreground)] shadow-sm">
+								Admin
 							</span>
 						)}
+						<div className="inline-flex w-fit rounded-xl border border-[var(--color-border)] bg-[var(--color-muted)] p-1 shadow-sm">
+							<button
+								type="button"
+								onClick={() => changeTournamentView("singles")}
+								className={`rounded-lg px-4 py-2 text-sm font-semibold tracking-[-0.01em] transition-all duration-200 ${
+									!isDoubles
+										? "bg-[var(--color-card)] text-[var(--color-foreground)] shadow-sm"
+										: "text-[var(--color-muted-foreground)] hover:text-[var(--color-foreground)]"
+								}`}
+							>
+								Vienetai
+							</button>
+							<button
+								type="button"
+								onClick={() => changeTournamentView("doubles")}
+								className={`rounded-lg px-4 py-2 text-sm font-semibold tracking-[-0.01em] transition-all duration-200 ${
+									isDoubles
+										? "bg-[var(--color-card)] text-[var(--color-foreground)] shadow-sm"
+										: "text-[var(--color-muted-foreground)] hover:text-[var(--color-foreground)]"
+								}`}
+							>
+								Dvejetai
+							</button>
+						</div>
+
 						<button
 							type="button"
 							onClick={toggleTheme}
-							className="p-2 rounded-md text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-							aria-label="Toggle theme"
+							className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-[var(--color-border)] bg-[var(--color-card)] text-[var(--color-muted-foreground)] shadow-sm transition-all duration-200 hover:border-[var(--color-ring)] hover:text-[var(--color-foreground)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring)]"
+							aria-label="Perjungti temą"
 						>
 							{theme === "dark" ? (
-								<Sun className="w-4 h-4" />
+								<Sun className="h-4 w-4" />
 							) : (
-								<Moon className="w-4 h-4" />
+								<Moon className="h-4 w-4" />
 							)}
 						</button>
 					</div>
 				</div>
 			</header>
 
-			<main className="max-w-[1600px] mx-auto px-4 py-6">
-				<div className="mb-6 inline-flex rounded-lg border border-gray-200 dark:border-gray-800 bg-gray-100 dark:bg-gray-900 p-1">
-					<button
-						type="button"
-						onClick={() => changeTournamentView("singles")}
-						className={`rounded-md px-4 py-2 text-sm font-medium transition-colors ${
-							!isDoubles
-								? "bg-white dark:bg-gray-800 text-gray-900 dark:text-white shadow-sm"
-								: "text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200"
-						}`}
-					>
-						Vienetai
-					</button>
-					<button
-						type="button"
-						onClick={() => changeTournamentView("doubles")}
-						className={`rounded-md px-4 py-2 text-sm font-medium transition-colors ${
-							isDoubles
-								? "bg-white dark:bg-gray-800 text-gray-900 dark:text-white shadow-sm"
-								: "text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200"
-						}`}
-					>
-						Dvejetai
-					</button>
-				</div>
-
+			<main className="mx-auto max-w-[1600px] px-4 py-6 sm:px-6 sm:py-8 lg:px-8">
 				{isDoubles ? (
 					<DoublesTournament isAdmin={isAdmin} />
 				) : (
 					<>
-						{/* Division Switcher */}
 						<Tabs
 							value={activeDivision}
 							onValueChange={setActiveDivision}
 							className="mb-6"
 						>
-							<TabsList className="bg-gray-100 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 p-1 h-auto flex-wrap">
+							<TabsList className="h-auto flex-wrap justify-start">
 								{divisions.map((div) => (
-									<TabsTrigger
-										key={div.id}
-										value={div.id}
-										className="data-[state=active]:bg-white dark:data-[state=active]:bg-gray-800 data-[state=active]:text-gray-900 dark:data-[state=active]:text-white text-gray-500 dark:text-gray-400 px-4 py-2 text-sm"
-									>
+									<TabsTrigger key={div.id} value={div.id}>
 										{div.name}
 									</TabsTrigger>
 								))}
 							</TabsList>
 						</Tabs>
 
-						{/* Loading */}
-						{loading && (
-							<div className="flex items-center justify-center py-20">
-								<div className="animate-spin rounded-full h-8 w-8 border-2 border-blue-500 border-t-transparent" />
-							</div>
-						)}
+						{loading && <LoadingState />}
 
 						{!loading && (
 							<>
@@ -148,7 +145,6 @@ function App() {
 									isAdmin={isAdmin}
 								/>
 
-								{/* Group Tables */}
 								<div
 									className={`grid gap-6 ${
 										groupNames.length > 1
@@ -173,10 +169,9 @@ function App() {
 				)}
 			</main>
 
-			{/* Footer */}
-			<footer className="border-t border-gray-200 dark:border-gray-800 mt-12 py-6 text-center text-xs text-gray-400 dark:text-gray-600">
-				Visagino All Inclusive 2026 &middot; {isDoubles ? "Dvejetų" : "Vienetų"}{" "}
-				Turnyras &middot; Group Stage
+			<footer className="mx-auto mt-10 max-w-[1600px] border-t border-[var(--color-border)] px-4 py-6 text-center text-xs text-[var(--color-muted-foreground)] sm:px-6 lg:px-8">
+				Visagino All Inclusive 2026 · {isDoubles ? "Dvejetų" : "Vienetų"}{" "}
+				turnyras · Grupių etapas
 			</footer>
 		</div>
 	);

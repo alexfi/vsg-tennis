@@ -61,13 +61,9 @@ export function DoublesTournament({ isAdmin }: DoublesTournamentProps) {
 				onValueChange={setActiveDivision}
 				className="mb-6"
 			>
-				<TabsList className="bg-gray-100 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 p-1 h-auto flex-wrap">
+				<TabsList className="h-auto flex-wrap justify-start">
 					{divisions.map((div) => (
-						<TabsTrigger
-							key={div.id}
-							value={div.id}
-							className="data-[state=active]:bg-white dark:data-[state=active]:bg-gray-800 data-[state=active]:text-gray-900 dark:data-[state=active]:text-white text-gray-500 dark:text-gray-400 px-4 py-2 text-sm"
-						>
+						<TabsTrigger key={div.id} value={div.id}>
 							{div.name}
 						</TabsTrigger>
 					))}
@@ -75,8 +71,8 @@ export function DoublesTournament({ isAdmin }: DoublesTournamentProps) {
 			</Tabs>
 
 			{loading && (
-				<div className="flex items-center justify-center py-20">
-					<div className="animate-spin rounded-full h-8 w-8 border-2 border-blue-500 border-t-transparent" />
+				<div className="flex items-center justify-center py-24">
+					<div className="h-8 w-8 animate-spin rounded-full border-2 border-[var(--color-border)] border-t-[var(--color-primary)]" />
 				</div>
 			)}
 
@@ -112,7 +108,7 @@ export function DoublesTournament({ isAdmin }: DoublesTournamentProps) {
 							))}
 						</div>
 					) : (
-						<div className="rounded-lg border border-dashed border-gray-300 dark:border-gray-700 p-6 text-sm text-gray-500 dark:text-gray-500">
+						<div className="rounded-2xl border border-dashed border-[var(--color-border)] bg-[var(--color-card)] p-6 text-sm text-[var(--color-muted-foreground)] shadow-sm">
 							Grupių lentelės bus parodytos, kai bus užbaigti burtai
 							{division.id === "mix" ? " ir paskirstymas į grupes" : ""}.
 						</div>

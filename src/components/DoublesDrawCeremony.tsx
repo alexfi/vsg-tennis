@@ -56,8 +56,8 @@ function BucketList({
 	usedPlayerIds?: Set<string>;
 }) {
 	return (
-		<div className="rounded-lg border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 p-3">
-			<h4 className="mb-2 text-xs font-bold uppercase tracking-wide text-gray-500 dark:text-gray-400">
+		<div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-card)] p-4 shadow-sm">
+			<h4 className="mb-3 text-xs font-bold uppercase tracking-[0.14em] text-[var(--color-muted-foreground)]">
 				{title}
 			</h4>
 			<ol className="space-y-1 text-sm">
@@ -68,11 +68,11 @@ function BucketList({
 							key={playerId}
 							className={
 								used
-									? "text-gray-400 dark:text-gray-600 line-through"
-									: "text-gray-800 dark:text-gray-200"
+									? "text-[var(--color-muted-foreground)] line-through opacity-65"
+									: "text-[var(--color-foreground)]"
 							}
 						>
-							<span className="mr-2 text-xs text-gray-400 dark:text-gray-600">
+							<span className="mr-2 text-xs text-[var(--color-muted-foreground)]">
 								{index + 1}.
 							</span>
 							{getDoublesPlayerName(playerId)}
@@ -105,13 +105,13 @@ function PhaseDrawCard({
 	const nextSeededPlayerId = phase.seeded[phasePairs.length];
 
 	return (
-		<section className="rounded-xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-900 p-4">
+		<section className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-muted)]/45 p-4 shadow-sm sm:p-5">
 			<div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
 				<div>
-					<h3 className="text-base font-semibold text-gray-900 dark:text-white">
+					<h3 className="text-base font-bold tracking-[-0.025em] text-[var(--color-foreground)]">
 						{phase.name}
 					</h3>
-					<p className="mt-1 text-xs text-gray-500 dark:text-gray-500">
+					<p className="mt-1 text-xs text-[var(--color-muted-foreground)]">
 						{complete
 							? "Visos šio etapo poros sukurtos."
 							: nextSeededPlayerId
@@ -138,12 +138,12 @@ function PhaseDrawCard({
 					playerIds={phase.draw}
 					usedPlayerIds={drawnPartnerIds}
 				/>
-				<div className="rounded-lg border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 p-3">
-					<h4 className="mb-2 text-xs font-bold uppercase tracking-wide text-gray-500 dark:text-gray-400">
+				<div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-card)] p-4 shadow-sm">
+					<h4 className="mb-3 text-xs font-bold uppercase tracking-[0.14em] text-[var(--color-muted-foreground)]">
 						Sukurtos poros
 					</h4>
 					{phasePairs.length === 0 ? (
-						<p className="text-sm text-gray-400 dark:text-gray-600">
+						<p className="text-sm text-[var(--color-muted-foreground)]">
 							Porų dar nėra.
 						</p>
 					) : (
@@ -151,9 +151,9 @@ function PhaseDrawCard({
 							{phasePairs.map((pair) => (
 								<li
 									key={pair.id}
-									className="rounded-md bg-blue-50 dark:bg-blue-950/30 px-2 py-1.5 text-gray-900 dark:text-gray-100"
+									className="rounded-lg border border-[var(--color-border)] bg-[var(--color-muted)] px-2.5 py-2 text-[var(--color-foreground)]"
 								>
-									<span className="mr-2 font-bold text-blue-600 dark:text-blue-400">
+									<span className="mr-2 font-extrabold text-[var(--color-foreground)]">
 										#{pair.drawOrder}
 									</span>
 									{getPairName(pair)}
@@ -187,13 +187,13 @@ function MixGroupAssignment({
 	const pairMap = new Map(sortedPairs.map((pair) => [pair.id, pair]));
 
 	return (
-		<section className="rounded-xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-900 p-4">
+		<section className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-muted)]/45 p-4 shadow-sm sm:p-5">
 			<div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
 				<div>
-					<h3 className="text-base font-semibold text-gray-900 dark:text-white">
+					<h3 className="text-base font-bold tracking-[-0.025em] text-[var(--color-foreground)]">
 						Mix · paskirstymas į grupes
 					</h3>
-					<p className="mt-1 text-xs text-gray-500 dark:text-gray-500">
+					<p className="mt-1 text-xs text-[var(--color-muted-foreground)]">
 						Pirmos 5 poros skirstomos A/B/A/B/A, kitos 5 – B/A/B/A/B.
 					</p>
 				</div>
@@ -212,17 +212,17 @@ function MixGroupAssignment({
 				{["A", "B"].map((groupName) => (
 					<div
 						key={groupName}
-						className="rounded-lg border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 p-3"
+						className="rounded-xl border border-[var(--color-border)] bg-[var(--color-card)] p-4 shadow-sm"
 					>
-						<h4 className="mb-2 text-sm font-bold text-gray-800 dark:text-gray-200">
+						<h4 className="mb-3 text-sm font-bold tracking-[-0.02em] text-[var(--color-foreground)]">
 							Grupė {groupName}
 						</h4>
 						{(groups?.[groupName] ?? []).length === 0 ? (
-							<p className="text-sm text-gray-400 dark:text-gray-600">
+							<p className="text-sm text-[var(--color-muted-foreground)]">
 								Dar nėra porų.
 							</p>
 						) : (
-							<ol className="space-y-1 text-sm text-gray-800 dark:text-gray-200">
+							<ol className="space-y-1 text-sm text-[var(--color-foreground)]">
 								{(groups?.[groupName] ?? []).map((pairId) => {
 									const pair = pairMap.get(pairId);
 									return pair ? (
@@ -272,10 +272,10 @@ export function DoublesDrawCeremony({
 		<section className="mb-6 space-y-4">
 			<div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
 				<div>
-					<h2 className="text-lg font-semibold text-gray-800 dark:text-gray-200">
+					<h2 className="text-lg font-bold tracking-[-0.03em] text-[var(--color-foreground)]">
 						Burtų ceremonija
 					</h2>
-					<p className="mt-1 text-xs text-gray-500 dark:text-gray-500">
+					<p className="mt-1 text-xs text-[var(--color-muted-foreground)]">
 						Sukurta {pairs.length} iš {expectedPairCount} porų. Žiūrovai mato
 						eigą, valdyti gali tik adminas.
 					</p>

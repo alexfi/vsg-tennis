@@ -245,16 +245,18 @@ function MatchCard({
 	}, [docId]);
 
 	return (
-		<div className="rounded-lg border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 p-3">
-			<div className="text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400 mb-2">
+		<div className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-card)] p-4 shadow-sm">
+			<div className="mb-3 text-xs font-bold uppercase tracking-[0.14em] text-[var(--color-muted-foreground)]">
 				{label}
 			</div>
 			<div className="grid grid-cols-[1fr_auto_1fr] items-center gap-2 text-sm">
 				<PlayerName participant={player1} />
-				<span className="text-xs text-gray-400 dark:text-gray-600">vs</span>
+				<span className="text-xs font-semibold text-[var(--color-muted-foreground)]">
+					vs
+				</span>
 				<PlayerName participant={player2} alignRight />
 			</div>
-			<div className="mt-3 rounded border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-900">
+			<div className="mt-3 overflow-hidden rounded-xl border border-[var(--color-border)] bg-[var(--color-muted)]">
 				<EditableScore
 					score={score}
 					isAdmin={isAdmin}
@@ -264,15 +266,15 @@ function MatchCard({
 				/>
 			</div>
 			{record && finalPlaces && winner.player && loser.player && (
-				<div className="mt-3 grid gap-1 text-xs text-gray-600 dark:text-gray-400">
+				<div className="mt-3 grid gap-1 text-xs text-[var(--color-muted-foreground)]">
 					<div>
-						<span className="font-semibold text-yellow-600 dark:text-yellow-400">
+						<span className="font-extrabold text-[var(--color-foreground)]">
 							{finalPlaces[0]} vieta:
 						</span>{" "}
 						{winner.player.name}
 					</div>
 					<div>
-						<span className="font-semibold text-gray-500 dark:text-gray-300">
+						<span className="font-semibold text-[var(--color-foreground)]">
 							{finalPlaces[1]} vieta:
 						</span>{" "}
 						{loser.player.name}
@@ -296,8 +298,8 @@ function PlayerName({
 				"truncate font-medium",
 				alignRight && "text-right",
 				participant.player
-					? "text-gray-900 dark:text-gray-100"
-					: "text-gray-400 dark:text-gray-600 italic",
+					? "text-[var(--color-foreground)]"
+					: "text-[var(--color-muted-foreground)] italic",
 			)}
 			title={participantName(participant)}
 		>
@@ -366,7 +368,7 @@ function PlacementBracket({
 
 	return (
 		<section className="space-y-3">
-			<h3 className="text-sm font-bold text-gray-800 dark:text-gray-200">
+			<h3 className="text-sm font-extrabold uppercase tracking-[0.12em] text-[var(--color-muted-foreground)]">
 				{title}
 			</h3>
 			<div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
@@ -428,7 +430,7 @@ function DirectPlacementMatch({
 }) {
 	return (
 		<section className="space-y-3">
-			<h3 className="text-sm font-bold text-gray-800 dark:text-gray-200">
+			<h3 className="text-sm font-extrabold uppercase tracking-[0.12em] text-[var(--color-muted-foreground)]">
 				Vietos 9–10
 			</h3>
 			<div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
@@ -573,28 +575,28 @@ function PrincessPlacementGroup({
 
 	return (
 		<section className="space-y-3">
-			<h3 className="text-sm font-bold text-gray-800 dark:text-gray-200">
+			<h3 className="text-sm font-extrabold uppercase tracking-[0.12em] text-[var(--color-muted-foreground)]">
 				Masters Princess · Vietos 5–9
 			</h3>
-			<div className="overflow-x-auto rounded-lg border border-gray-200 dark:border-gray-800">
-				<table className="border-collapse bg-white dark:bg-gray-950">
+			<div className="overflow-x-auto rounded-2xl border border-[var(--color-border)] bg-[var(--color-card)] shadow-sm">
+				<table className="min-w-max border-separate border-spacing-0">
 					<thead>
 						<tr>
-							<th className="border border-gray-300 dark:border-gray-700 bg-gray-100 dark:bg-gray-900 px-2 py-2 text-xs text-gray-500 dark:text-gray-400 font-medium w-36 text-left">
+							<th className="sticky left-0 z-20 w-40 border-b border-r border-[var(--color-border)] bg-[var(--color-muted)] px-3 py-3 text-left text-xs font-bold uppercase tracking-[0.12em] text-[var(--color-muted-foreground)]">
 								Žaidėjas
 							</th>
 							{sortedParticipants.map((p) => (
 								<th
 									key={p.slot}
-									className="border border-gray-300 dark:border-gray-700 bg-gray-100 dark:bg-gray-900 px-1 py-2 text-xs text-gray-500 dark:text-gray-400 font-medium w-28"
+									className="w-28 border-b border-r border-[var(--color-border)] bg-[var(--color-muted)] px-2 py-3 text-center text-xs font-semibold text-[var(--color-muted-foreground)]"
 								>
 									{participantName(p)}
 								</th>
 							))}
-							<th className="border border-gray-300 dark:border-gray-700 bg-gray-100 dark:bg-gray-900 px-2 py-2 text-xs text-gray-500 dark:text-gray-400 font-medium w-16 text-center">
+							<th className="w-16 border-b border-r border-[var(--color-border)] bg-[var(--color-muted)] px-2 py-3 text-center text-xs font-bold uppercase tracking-[0.12em] text-[var(--color-muted-foreground)]">
 								Taškai
 							</th>
-							<th className="border border-gray-300 dark:border-gray-700 bg-gray-100 dark:bg-gray-900 px-2 py-2 text-xs text-gray-500 dark:text-gray-400 font-medium w-16 text-center">
+							<th className="w-16 border-b border-[var(--color-border)] bg-[var(--color-muted)] px-2 py-3 text-center text-xs font-bold uppercase tracking-[0.12em] text-[var(--color-muted-foreground)]">
 								Vieta
 							</th>
 						</tr>
@@ -609,10 +611,10 @@ function PrincessPlacementGroup({
 								<tr key={row.slot}>
 									<td
 										className={cn(
-											"border border-gray-300 dark:border-gray-700 bg-gray-100 dark:bg-gray-900 px-2 py-2 text-xs font-medium",
+											"sticky left-0 z-10 border-b border-r border-[var(--color-border)] bg-[var(--color-muted)] px-3 py-3 text-xs font-semibold shadow-[8px_0_16px_-18px_var(--color-foreground)]",
 											row.player
-												? "text-gray-700 dark:text-gray-300"
-												: "text-gray-400 dark:text-gray-600 italic",
+												? "text-[var(--color-foreground)]"
+												: "text-[var(--color-muted-foreground)] italic",
 										)}
 									>
 										{participantName(row)}
@@ -623,7 +625,7 @@ function PrincessPlacementGroup({
 											return (
 												<td
 													key={col.slot}
-													className="border border-gray-300 dark:border-gray-700 bg-gray-100 dark:bg-gray-900 w-28 h-12"
+													className="h-12 w-28 border-b border-r border-[var(--color-border)] bg-[var(--color-muted)]/70"
 												/>
 											);
 										}
@@ -643,7 +645,7 @@ function PrincessPlacementGroup({
 										return (
 											<td
 												key={col.slot}
-												className="border border-gray-300 dark:border-gray-700 p-0 w-28 h-12"
+												className="h-12 w-28 border-b border-r border-[var(--color-border)] bg-[var(--color-card)] p-0"
 											>
 												<EditableScore
 													score={score}
@@ -658,10 +660,10 @@ function PrincessPlacementGroup({
 											</td>
 										);
 									})}
-									<td className="border border-gray-300 dark:border-gray-700 text-center text-sm font-bold text-gray-900 dark:text-white bg-gray-100 dark:bg-gray-900">
+									<td className="border-b border-r border-[var(--color-border)] bg-[var(--color-muted)] text-center text-sm font-extrabold text-[var(--color-foreground)]">
 										{rowStanding?.points ?? 0}
 									</td>
-									<td className="border border-gray-300 dark:border-gray-700 text-center text-sm font-bold text-yellow-600 dark:text-yellow-400 bg-gray-100 dark:bg-gray-900">
+									<td className="border-b border-[var(--color-border)] bg-[var(--color-muted)] text-center text-sm font-extrabold text-[var(--color-foreground)]">
 										{rowStanding ? rowStanding.position + 4 : "-"}
 									</td>
 								</tr>
@@ -706,13 +708,13 @@ export function FinalStage({ division, matches, isAdmin }: FinalStageProps) {
 		makeGroupSlot(label, groupStageComplete, groupPlayersByPosition);
 
 	return (
-		<section className="mb-6">
+		<section className="mb-6 rounded-3xl border border-[var(--color-border)] bg-[var(--color-card)] p-5 shadow-sm sm:p-6">
 			<div className="mb-6">
-				<h2 className="text-lg font-semibold text-gray-800 dark:text-gray-200">
+				<h2 className="text-lg font-bold tracking-[-0.03em] text-[var(--color-foreground)]">
 					Finalinis etapas
 				</h2>
 				{!groupStageComplete && (
-					<p className="mt-1 text-xs text-gray-500 dark:text-gray-500">
+					<p className="mt-1 text-xs text-[var(--color-muted-foreground)]">
 						Dalyviai bus parodyti po visų grupių etapo mačų. Iki tol rodomos
 						pozicijos A1, B2 ir t. t.
 					</p>
