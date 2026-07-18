@@ -79,7 +79,7 @@ function App() {
 							<button
 								type="button"
 								onClick={() => changeTournamentView("singles")}
-								className={`rounded-lg px-4 py-2 text-sm font-semibold tracking-[-0.01em] transition-all duration-200 ${
+								className={`rounded-lg px-4 py-2 text-sm! font-semibold! tracking-[-0.01em] transition-all duration-200 ${
 									!isDoubles
 										? "bg-[var(--color-card)] text-[var(--color-foreground)] shadow-sm"
 										: "text-[var(--color-muted-foreground)] hover:text-[var(--color-foreground)]"
@@ -90,7 +90,7 @@ function App() {
 							<button
 								type="button"
 								onClick={() => changeTournamentView("doubles")}
-								className={`rounded-lg px-4 py-2 text-sm font-semibold tracking-[-0.01em] transition-all duration-200 ${
+								className={`rounded-lg px-4 py-2 text-sm! font-semibold! tracking-[-0.01em] transition-all duration-200 ${
 									isDoubles
 										? "bg-[var(--color-card)] text-[var(--color-foreground)] shadow-sm"
 										: "text-[var(--color-muted-foreground)] hover:text-[var(--color-foreground)]"
