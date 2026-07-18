@@ -67,7 +67,7 @@ const DIVISIONS: Record<string, Division> = {
 				{ id: "msl_a4", name: "Igor Naguj" },
 			],
 			B: [
-				{ id: "msl_b1", name: "Kazimiras" },
+				{ id: "msl_b1", name: "Kazimieras" },
 				{ id: "msl_b2", name: "Dmitrij Dudov" },
 				{ id: "msl_b3", name: "Aleksandr Fiodorov" },
 				{ id: "msl_b4", name: "Andrej Dydenko" },

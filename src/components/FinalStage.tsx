@@ -1,5 +1,4 @@
 import { useCallback, useMemo } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { EditableScore } from "@/components/EditableScore";
 import type { Division, Player } from "@/data/tournament";
 import { makeMatchDocId } from "@/data/tournament";
@@ -707,19 +706,19 @@ export function FinalStage({ division, matches, isAdmin }: FinalStageProps) {
 		makeGroupSlot(label, groupStageComplete, groupPlayersByPosition);
 
 	return (
-		<Card className="border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 mb-6">
-			<CardHeader>
-				<CardTitle className="text-lg text-gray-800 dark:text-gray-200">
+		<section className="mb-6">
+			<div className="mb-6">
+				<h2 className="text-lg font-semibold text-gray-800 dark:text-gray-200">
 					Finalinis etapas
-				</CardTitle>
+				</h2>
 				{!groupStageComplete && (
-					<p className="text-xs text-gray-500 dark:text-gray-500 mt-1">
+					<p className="mt-1 text-xs text-gray-500 dark:text-gray-500">
 						Dalyviai bus parodyti po visų grupių etapo mačų. Iki tol rodomos
 						pozicijos A1, B2 ir t. t.
 					</p>
 				)}
-			</CardHeader>
-			<CardContent className="space-y-6">
+			</div>
+			<div className="space-y-6">
 				<PlacementBracket
 					title="Vietos 1–4"
 					divisionId={division.id}
@@ -808,7 +807,7 @@ export function FinalStage({ division, matches, isAdmin }: FinalStageProps) {
 						]}
 					/>
 				)}
-			</CardContent>
-		</Card>
+			</div>
+		</section>
 	);
 }
