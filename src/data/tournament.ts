@@ -28,8 +28,9 @@ export const TOURNAMENT_DATA: TournamentData = {
         A: [
           { id: "pow_1", name: "Artem Staščiuk" },
           { id: "pow_2", name: "Ivan Gorbun" },
-          { id: "pow_3", name: "Artur Margiavičius" },
+          { id: "pow_3", name: "Artur Margevičius" },
           { id: "pow_4", name: "Ksenija Klimova" },
+          { id: "pow_5", name: "Vladimir Lukašenko" },
         ],
       },
     },
@@ -85,7 +86,7 @@ export const TOURNAMENT_DATA: TournamentData = {
         B: [
           { id: "mpr_b1", name: "Aliona Šugajeva" },
           { id: "mpr_b2", name: "Darija Osipova" },
-          { id: "mpr_b3", name: "Ilona Čebatorionaitė" },
+          { id: "mpr_b3", name: "Ilona Čebatoriūnaitė" },
           { id: "mpr_b4", name: "Ksenija Tomm" },
         ],
       },
