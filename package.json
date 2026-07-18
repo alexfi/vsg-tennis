@@ -7,6 +7,7 @@
 		"dev": "vite",
 		"build": "tsc -b && vite build",
 		"deploy:hosting": "npm run build && firebase deploy --only hosting",
+		"deploy:rules": "firebase deploy --only firestore:rules",
 		"deploy": "npm run deploy:hosting",
 		"lint": "oxlint",
 		"preview": "vite preview"
