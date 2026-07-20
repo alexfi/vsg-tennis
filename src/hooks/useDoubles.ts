@@ -120,10 +120,18 @@ export function useDoublesDraw(divisionId: string): {
 			if (!seededPlayerId) return;
 
 			const alreadyDrawn = new Set(phasePairs.map((pair) => pair.player2Id));
+			const fixedDrawPlayerId = phase.fixedDraws?.[seededPlayerId];
+			const fixedDrawPlayerIds = new Set(Object.values(phase.fixedDraws ?? {}));
 			const remainingDrawPlayers = phase.draw.filter(
-				(playerId) => !alreadyDrawn.has(playerId),
+				(playerId) =>
+					!alreadyDrawn.has(playerId) &&
+					(fixedDrawPlayerId === playerId || !fixedDrawPlayerIds.has(playerId)),
 			);
-			const drawnPlayerId = randomItem(remainingDrawPlayers);
+			const drawnPlayerId = fixedDrawPlayerId
+				? remainingDrawPlayers.find(
+						(playerId) => playerId === fixedDrawPlayerId,
+					)
+				: randomItem(remainingDrawPlayers);
 			if (!drawnPlayerId) return;
 
 			const drawOrder =

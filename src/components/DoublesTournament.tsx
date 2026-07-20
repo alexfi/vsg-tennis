@@ -78,22 +78,10 @@ export function DoublesTournament({ isAdmin }: DoublesTournamentProps) {
 
 			{!loading && (
 				<>
-					<DoublesDrawCeremony
-						division={division}
-						drawState={drawState}
-						isAdmin={isAdmin}
-						hasResults={hasResults}
-						onCreateNextPair={(phase) => createNextPair(division, phase)}
-						onAssignNextMixGroup={() => assignNextMixGroup(division)}
-						onReset={resetDraw}
-					/>
-
-					{canShowTables ? (
+					{canShowTables && (
 						<div
-							className={`grid gap-6 ${
-								Object.keys(groups).length > 1
-									? "grid-cols-1 xl:grid-cols-2"
-									: "grid-cols-1"
+							className={`grid gap-6 mb-6 ${
+								Object.keys(groups).length > 1 ? "grid-cols-1" : "grid-cols-1"
 							}`}
 						>
 							{Object.entries(groups).map(([groupName, pairs]) => (
@@ -107,12 +95,17 @@ export function DoublesTournament({ isAdmin }: DoublesTournamentProps) {
 								/>
 							))}
 						</div>
-					) : (
-						<div className="rounded-2xl border border-dashed border-[var(--color-border)] bg-[var(--color-card)] p-6 text-sm text-[var(--color-muted-foreground)] shadow-sm">
-							Grupių lentelės bus parodytos, kai bus užbaigti burtai
-							{division.id === "mix" ? " ir paskirstymas į grupes" : ""}.
-						</div>
 					)}
+
+					<DoublesDrawCeremony
+						division={division}
+						drawState={drawState}
+						isAdmin={isAdmin}
+						hasResults={hasResults}
+						onCreateNextPair={(phase) => createNextPair(division, phase)}
+						onAssignNextMixGroup={() => assignNextMixGroup(division)}
+						onReset={resetDraw}
+					/>
 				</>
 			)}
 		</>

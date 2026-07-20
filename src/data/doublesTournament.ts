@@ -19,6 +19,7 @@ export interface PairingPhaseConfig {
 	pairIdPrefix: string;
 	seeded: string[];
 	draw: string[];
+	fixedDraws?: Record<string, string>;
 }
 
 export interface DoublesDivision {
@@ -157,7 +158,7 @@ export const DOUBLES_TOURNAMENT_DATA: DoublesTournamentData = {
 		},
 		anastasija_lykosova: {
 			id: "anastasija_lykosova",
-			name: "Анастасия Лыкосова",
+			name: "Анна Костенко",
 			gender: "female",
 		},
 		justina_jakaite: {

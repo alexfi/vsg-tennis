@@ -254,6 +254,9 @@ export function DoublesDrawCeremony({
 	);
 	const expectedPairCount = getExpectedPairCount(division);
 	const allPairsComplete = pairs.length >= expectedPairCount;
+	const allowReset =
+		typeof window !== "undefined" &&
+		new URLSearchParams(window.location.search).get("allow-reset") === "1";
 
 	const reset = async () => {
 		if (hasResults) {
@@ -280,7 +283,7 @@ export function DoublesDrawCeremony({
 						eigą, valdyti gali tik adminas.
 					</p>
 				</div>
-				{isAdmin && pairs.length > 0 && (
+				{isAdmin && allowReset && pairs.length > 0 && (
 					<Button type="button" variant="outline" size="sm" onClick={reset}>
 						Atstatyti burtus
 					</Button>

@@ -44,10 +44,6 @@ function App() {
 
 	const groupNames = Object.keys(division.groups);
 	const isDoubles = tournamentView === "doubles";
-	const title = isDoubles
-		? "Visagino ALL INCLUSIVE 2026 dvejetų turnyras"
-		: TOURNAMENT_DATA.tournamentName;
-	const activeDivisionName = isDoubles ? "Dvejetai" : division.name;
 
 	const changeTournamentView = (view: TournamentView) => {
 		setTournamentView(view);
