@@ -13,7 +13,7 @@ export interface MatchRecord {
 
 /** Format games arrays into a score string (e.g., [6,6],[4,1] → "6:4, 6:1") */
 export function formatScore(games1: number[], games2: number[]): string {
-	if (games1.length === 0 && games2.length === 0) return "-";
+	if (games1.length === 0 && games2.length === 0) return "0:0";
 	return games1.map((g, i) => `${g}:${games2[i]}`).join(", ");
 }
 

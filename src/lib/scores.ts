@@ -1,7 +1,11 @@
 export function parseScoreInput(
 	input: string,
 ): { games1: number[]; games2: number[] } | null {
-	// "-" means a draw — each player/pair gets 1 point
+	// "0:0" means a draw — each player/pair gets 1 point
+	if (input.trim() === "0:0") {
+		return { games1: [], games2: [] };
+	}
+	// "-" (legacy) also means a draw
 	if (input.trim() === "-") {
 		return { games1: [], games2: [] };
 	}
@@ -62,7 +66,7 @@ export function normalizeScoreForStorage(
 	const player2Games = displayP1IsStoredP1
 		? displayPlayer2Games
 		: displayPlayer1Games;
-	// Draw: empty games arrays → each player/pair gets 1 point
+	// Draw ("0:0"): empty games arrays → each player/pair gets 1 point
 	if (player1Games.length === 0 && player2Games.length === 0) {
 		return {
 			player1Id,

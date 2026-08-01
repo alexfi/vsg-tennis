@@ -19,7 +19,7 @@ export function EditableScore({
 	disabled = false,
 	muted = false,
 	className,
-	placeholder = "6:4, 6:2 (arba - lygiosioms)",
+	placeholder = "6:4, 6:2 (arba 0:0 lygiosioms)",
 	onSave,
 	onDelete,
 }: EditableScoreProps) {

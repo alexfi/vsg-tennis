@@ -33,8 +33,7 @@ function makeFinalDocId(divisionId: string, slotId: string): string {
 
 function hasResult(record: MatchRecord | undefined): record is MatchRecord {
 	return (
-		!!record &&
-		(record.player1Games.length > 0 || record.winnerId === "draw")
+		!!record && (record.player1Games.length > 0 || record.winnerId === "draw")
 	);
 }
 
@@ -131,7 +130,7 @@ function getScoreForDisplay(
 ): string | null {
 	if (!record || !displayPlayer1) return null;
 
-	if (record.winnerId === "draw") return "-";
+	if (record.winnerId === "draw") return "0:0";
 
 	const rowIsStoredP1 = displayPlayer1.id === record.player1Id;
 	const [left, right] = rowIsStoredP1
