@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { DoublesDrawCeremony } from "@/components/DoublesDrawCeremony";
+import { DoublesFinalStage } from "@/components/DoublesFinalStage";
 import { DoublesGroupTable } from "@/components/DoublesGroupTable";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
@@ -79,22 +80,30 @@ export function DoublesTournament({ isAdmin }: DoublesTournamentProps) {
 			{!loading && (
 				<>
 					{canShowTables && (
-						<div
-							className={`grid gap-6 mb-6 ${
-								Object.keys(groups).length > 1 ? "grid-cols-1" : "grid-cols-1"
-							}`}
-						>
-							{Object.entries(groups).map(([groupName, pairs]) => (
-								<DoublesGroupTable
-									key={groupName}
-									divisionId={division.id}
-									groupName={groupName}
-									pairs={pairs}
-									matches={matches}
-									isAdmin={isAdmin}
-								/>
-							))}
-						</div>
+						<>
+							<DoublesFinalStage
+								divisionId={activeDivision}
+								groups={groups}
+								matches={matches}
+								isAdmin={isAdmin}
+							/>
+							<div
+								className={`grid gap-6 mb-6 ${
+									Object.keys(groups).length > 1 ? "grid-cols-1" : "grid-cols-1"
+								}`}
+							>
+								{Object.entries(groups).map(([groupName, pairs]) => (
+									<DoublesGroupTable
+										key={groupName}
+										divisionId={division.id}
+										groupName={groupName}
+										pairs={pairs}
+										matches={matches}
+										isAdmin={isAdmin}
+									/>
+								))}
+							</div>
+						</>
 					)}
 
 					<DoublesDrawCeremony
