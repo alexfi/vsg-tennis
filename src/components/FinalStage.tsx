@@ -32,7 +32,10 @@ function makeFinalDocId(divisionId: string, slotId: string): string {
 }
 
 function hasResult(record: MatchRecord | undefined): record is MatchRecord {
-	return !!record && record.player1Games.length > 0 && !!record.winnerId;
+	return (
+		!!record &&
+		(record.player1Games.length > 0 || record.winnerId === "draw")
+	);
 }
 
 function allGroupMatchesComplete(
@@ -128,6 +131,8 @@ function getScoreForDisplay(
 ): string | null {
 	if (!record || !displayPlayer1) return null;
 
+	if (record.winnerId === "draw") return "-";
+
 	const rowIsStoredP1 = displayPlayer1.id === record.player1Id;
 	const [left, right] = rowIsStoredP1
 		? [record.player1Games, record.player2Games]
@@ -142,7 +147,7 @@ function getMatchResult(
 	p2: Participant,
 	sourceLabel: string,
 ): ResolvedResult {
-	if (!record || !p1.player || !p2.player) {
+	if (!record || !p1.player || !p2.player || record.winnerId === "draw") {
 		return null;
 	}
 
@@ -206,8 +211,11 @@ function MatchCard({
 	);
 	const score = getScoreForDisplay(record, player1.player);
 	const canEdit = !!player1.player && !!player2.player;
-	const winner = record?.winnerId === player1.player?.id ? player1 : player2;
-	const loser = record?.winnerId === player1.player?.id ? player2 : player1;
+	const isDraw = record?.winnerId === "draw";
+	const winner =
+		!isDraw && record?.winnerId === player1.player?.id ? player1 : player2;
+	const loser =
+		!isDraw && record?.winnerId === player1.player?.id ? player2 : player1;
 
 	const handleSave = useCallback(
 		async (scoreInput: string) => {
@@ -265,7 +273,7 @@ function MatchCard({
 					onDelete={handleDelete}
 				/>
 			</div>
-			{record && finalPlaces && winner.player && loser.player && (
+			{record && !isDraw && finalPlaces && winner.player && loser.player && (
 				<div className="mt-3 grid gap-1 text-xs text-[var(--color-muted-foreground)]">
 					<div>
 						<span className="font-extrabold text-[var(--color-foreground)]">

@@ -1,6 +1,11 @@
 export function parseScoreInput(
 	input: string,
 ): { games1: number[]; games2: number[] } | null {
+	// "-" means a draw — each player/pair gets 1 point
+	if (input.trim() === "-") {
+		return { games1: [], games2: [] };
+	}
+
 	const g1: number[] = [];
 	const g2: number[] = [];
 
@@ -57,6 +62,17 @@ export function normalizeScoreForStorage(
 	const player2Games = displayP1IsStoredP1
 		? displayPlayer2Games
 		: displayPlayer1Games;
+	// Draw: empty games arrays → each player/pair gets 1 point
+	if (player1Games.length === 0 && player2Games.length === 0) {
+		return {
+			player1Id,
+			player2Id,
+			player1Games: [],
+			player2Games: [],
+			winnerId: "draw",
+		};
+	}
+
 	const winnerId = getWinnerIdFromGames(
 		player1Id,
 		player2Id,

@@ -13,6 +13,7 @@ export interface MatchRecord {
 
 /** Format games arrays into a score string (e.g., [6,6],[4,1] → "6:4, 6:1") */
 export function formatScore(games1: number[], games2: number[]): string {
+	if (games1.length === 0 && games2.length === 0) return "-";
 	return games1.map((g, i) => `${g}:${games2[i]}`).join(", ");
 }
 
@@ -61,6 +62,14 @@ export function computeStandings(
 		if (!p1 || !p2) continue;
 
 		const winnerId = record.winnerId;
+
+		// Draw: both players/pairs get 1 point each, no wins/losses
+		if (winnerId === "draw") {
+			p1.points += 1;
+			p2.points += 1;
+			continue;
+		}
+
 		const loserId = winnerId === player1Id ? player2Id : player1Id;
 		const winner = map.get(winnerId)!;
 		const loser = map.get(loserId)!;

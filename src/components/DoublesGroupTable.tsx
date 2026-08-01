@@ -8,6 +8,7 @@ import type { MatchRecord } from "@/lib/standings";
 import { computeStandings, formatScore } from "@/lib/standings";
 
 function displayScore(record: MatchRecord, rowIsP1: boolean): string | null {
+	if (record.winnerId === "draw") return "-";
 	const p1 = record.player1Games;
 	const p2 = record.player2Games;
 	if (!p1 || !p2 || p1.length === 0) return null;
@@ -56,7 +57,11 @@ export function DoublesGroupTable({
 					p2.id,
 				);
 				const record = matches.get(docId);
-				if (record && record.player1Games.length > 0 && record.winnerId) {
+				if (
+					record &&
+					(record.player1Games.length > 0 ||
+						record.winnerId === "draw")
+				) {
 					matchResults.push({ player1Id, player2Id, record });
 				}
 			}
